@@ -33,7 +33,7 @@ jobs:
       run: dotnet build --no-restore
       
     - name: Publish
-      run: dotnet publish -c Release -o release --nologo --no-build
+      run: dotnet publish GithubPages.App\GithubPages.App.csproj -c Release -o release --nologo --no-build
       
     # changes the base-tag in index.html from '/' to 'BlazorGitHubPagesDemo' to match GitHub Pages repository subdirectory
     # - name: Change base-tag in index.html from / to BlazorGitHubPagesDemo
