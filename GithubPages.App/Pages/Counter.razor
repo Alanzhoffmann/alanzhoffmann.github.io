@@ -6,7 +6,7 @@
 
 <p role="status">Current count: @currentCount</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<FluentButton OnClick="IncrementCount" IconEnd="new Icons.Regular.Size16.Add()">Click me</FluentButton>
 
 @code {
     private int currentCount = 0;
