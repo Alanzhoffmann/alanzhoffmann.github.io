@@ -10,7 +10,7 @@ public partial class CatPic : ComponentBase
     private const string BaseUrl = "https://cataas.com/cat";
 
     public int Width { get; set; } = 400;
-    public int Height { get; set; } = 300;
+    public int Height { get; set; } = 400;
 
     [Inject]
     private HttpClient Client { get; set; } = default!;
