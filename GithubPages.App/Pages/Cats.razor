@@ -1,0 +1,15 @@
+﻿@page "/cats"
+
+<h3>Cats</h3>
+
+<FluentHorizontalScroll View="HorizontalScrollView.Mobile" Style="width:80vw">
+    @for (var i = 0; i < AmountOfCats; i++)
+    {
+        <CatPic />
+    }
+</FluentHorizontalScroll>
+
+@code
+{
+    int AmountOfCats { get; set; } = 10;
+}
