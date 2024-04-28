@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace GithubPages.App.Components;
 
-public partial class CatPic
+public partial class CatPic : ComponentBase
 {
     private const string BaseUrl = "https://cataas.com/cat";
 
