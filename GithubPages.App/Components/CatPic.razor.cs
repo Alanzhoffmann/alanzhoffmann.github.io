@@ -9,8 +9,9 @@ public partial class CatPic : ComponentBase
 {
     private const string BaseUrl = "https://cataas.com/cat";
 
-    public int Width { get; set; } = 400;
-    public int Height { get; set; } = 400;
+    public int Width { get; } = 400;
+    public int Height { get; } = 400;
+    public string[] Tags { get; set; } = [];
 
     [Inject]
     private HttpClient Client { get; set; } = default!;
@@ -18,10 +19,10 @@ public partial class CatPic : ComponentBase
     [Parameter]
     public string? Text { get; set; }
 
-    [MemberNotNullWhen(true, nameof(CatPicUrl))]
-    public bool HasCatPic { get; set; }
+    [MemberNotNullWhen(true, nameof(CatImage))]
+    public bool IsLoaded { get; set; }
 
-    public string? CatPicUrl { get; set; }
+    public byte[]? CatImage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -31,10 +32,13 @@ public partial class CatPic : ComponentBase
 
         if (cat is not null)
         {
-            HasCatPic = true;
-            CatPicUrl = $"{BaseUrl}/{cat.Id}?width={Width}&height={Height}";
+            IsLoaded = true;
+            CatImage = await Client.GetByteArrayAsync($"{BaseUrl}/{cat.Id}?width={Width}&height={Height}");
 
-            Console.WriteLine(CatPicUrl);
+            if (cat.Tags?.Length > 0)
+            {
+                Tags = cat.Tags;
+            }
         }
     }
 }
