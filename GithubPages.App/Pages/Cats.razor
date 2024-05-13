@@ -4,43 +4,18 @@
 
 <FluentStack Wrap="true">
     <Virtualize ItemsProvider="LoadCats">
-        @context
+        <CatPic />
     </Virtualize>
 </FluentStack>
 
 @code
 {
-    int MaxAmountOfCats { get; set; } = 100;
+    int AmountOfCats { get; set; } = 100;
 
-    List<RenderFragment> _virtualizedCats = [];
-
-    private ValueTask<ItemsProviderResult<RenderFragment>> LoadCats(ItemsProviderRequest request)
+    private ValueTask<ItemsProviderResult<int>> LoadCats(ItemsProviderRequest request)
     {
-        List<RenderFragment> catsToLoad = [];
-        List<Task> loaders = [];
+        var amountToLoad = Math.Min(request.Count, AmountOfCats - request.StartIndex);
 
-        while (_virtualizedCats.Count < request.StartIndex + request.Count)
-        {
-            var catPic = DrawCatPic();
-            _virtualizedCats.Add(catPic);
-        }
-
-        var amountToLoad = Math.Min(request.Count, MaxAmountOfCats - request.StartIndex);
-
-        for (int i = request.StartIndex; i < request.Count; i++)
-        {
-            catsToLoad.Add(_virtualizedCats[i]);
-        }
-
-        return new(new ItemsProviderResult<RenderFragment>(catsToLoad, MaxAmountOfCats));
-    }
-
-    RenderFragment DrawCatPic()
-    {
-        return new RenderFragment(builder =>
-        {
-            builder.OpenComponent<CatPic>(0);
-            builder.CloseComponent();
-        });
+        return new(new ItemsProviderResult<int>(Enumerable.Range(request.StartIndex, amountToLoad), AmountOfCats));
     }
 }
