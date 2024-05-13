@@ -2,14 +2,45 @@
 
 <h3>Cats</h3>
 
-<FluentHorizontalScroll Speed="1200" Style="width:85vw">
-    @for (var i = 0; i < AmountOfCats; i++)
-    {
-        <CatPic />
-    }
-</FluentHorizontalScroll>
+<FluentStack Wrap="true">
+    <Virtualize ItemsProvider="LoadCats">
+        @context
+    </Virtualize>
+</FluentStack>
 
 @code
 {
-    int AmountOfCats { get; set; } = 10;
+    int MaxAmountOfCats { get; set; } = 100;
+
+    List<RenderFragment> _virtualizedCats = [];
+
+    private ValueTask<ItemsProviderResult<RenderFragment>> LoadCats(ItemsProviderRequest request)
+    {
+        List<RenderFragment> catsToLoad = [];
+        List<Task> loaders = [];
+
+        while (_virtualizedCats.Count < request.StartIndex + request.Count)
+        {
+            var catPic = DrawCatPic();
+            _virtualizedCats.Add(catPic);
+        }
+
+        var amountToLoad = Math.Min(request.Count, MaxAmountOfCats - request.StartIndex);
+
+        for (int i = request.StartIndex; i < request.Count; i++)
+        {
+            catsToLoad.Add(_virtualizedCats[i]);
+        }
+
+        return new(new ItemsProviderResult<RenderFragment>(catsToLoad, MaxAmountOfCats));
+    }
+
+    RenderFragment DrawCatPic()
+    {
+        return new RenderFragment(builder =>
+        {
+            builder.OpenComponent<CatPic>(0);
+            builder.CloseComponent();
+        });
+    }
 }

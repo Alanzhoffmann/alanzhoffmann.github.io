@@ -19,21 +19,21 @@ public partial class CatPic : ComponentBase
     [Parameter]
     public string? Text { get; set; }
 
-    [MemberNotNullWhen(true, nameof(CatImage))]
+    [MemberNotNullWhen(true, nameof(CatUrl))]
     public bool IsLoaded { get; set; }
 
-    public byte[]? CatImage { get; set; }
+    public string? CatUrl { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await base.OnInitializedAsync();
+        await base.OnAfterRenderAsync(firstRender);
 
         var cat = await Client.GetFromJsonAsync<Cat>(BaseUrl + "?json=true");
 
         if (cat is not null)
         {
             IsLoaded = true;
-            CatImage = await Client.GetByteArrayAsync($"{BaseUrl}/{cat.Id}?width={Width}&height={Height}");
+            CatUrl = $"{BaseUrl}/{cat.Id}?width={Width}&height={Height}";
 
             if (cat.Tags?.Length > 0)
             {
